@@ -142,7 +142,7 @@ public class ServerConfig {
     }
 
     public static class BootstrapConfiguration{
-        public String serverNamePrefix="cloudify_pool_server";
+        public String serverNamePrefix="cloudifypoo";
         public String zoneName="az-1.region-a.geo-l";
         public String keyPair="cloudify";
         public String securityGroup="default";
@@ -175,7 +175,8 @@ public class ServerConfig {
         public String cloudifyHpUploadDirName = "upload";
         public String cloudPropertiesFileName = "hp-cloud.properties";
         public String zoneName = "az-2.region-a.geo-1";
-        public String hardwareId = "102";
+        public String hardwareId = "1640";
+        public String locationId = "37473";
         public String linuxImageId = "221";
         public String securityGroup = "cloudifySecurityGroup";
         public String cloudifyEscDirRelativePath = "clouds";

@@ -1,8 +1,8 @@
 package clouds.base;
 
-import java.util.Map;
-
 import com.google.common.collect.Multimap;
+
+import java.util.Map;
 
 /**
  * 
@@ -14,7 +14,10 @@ public interface CloudServer {
 	   /**
 	    * @return the ip addresses assigned to the server
 	    */
-	   Multimap<String, CloudAddress> getAddresses();
+//	   Multimap<String, CloudAddress> getAddresses();
+
+       String getPublicAddress();
+       String getPrivateAddress();
 	   /**
 	    * 
 	    * @return id

@@ -17,6 +17,7 @@ package server;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import clouds.base.CloudDriver;
 import mocks.EventMonitorMock;
 
 import org.slf4j.Logger;
@@ -207,22 +208,16 @@ public class ApplicationContext
     	
     	return ( BootstrapCloudHandler )getBean(cloudProvider.label + "BootstrapCloudHandler");
     }
-    
-/*    public static class SoftlayerHandler implements BootstrapCloudHandler{
-    	
-    	@Override
-    	public Machine createMachine( ServerNode serverNode ){
-    		SoftlayerAdvancedParams params = Json.fromJson( Json.parse(serverNode.getAdvancedParams()), SoftlaterAdvancedParams.class);
-    	}
-    	
-//    	 { "type": "softlayer", "params":{"userId":"", "apiKey":"", "anotherKey":""}}}
-//    	 @author evgenyf
-    	     	 
-    	public static class SoftlayerAdvancedParams{
-    		String userId;
-    		String apiKey;
-    	}
-    }*/
+
+    public static CloudDriver getCloudDriver( CloudProvider cloudProvider ){
+
+        String beanName = cloudProvider.label + "CloudDriver";
+        CloudDriver cloudDriver = (CloudDriver) getBean(beanName);
+        if( cloudDriver == null ){
+            throw new RuntimeException("There is no [" + beanName + "] bean defined for cloud [" + cloudProvider.label + "]" );
+        }
+        return cloudDriver;
+    }
 
     public PoolEventListener getPoolEventManager() {
         return poolEventManager;

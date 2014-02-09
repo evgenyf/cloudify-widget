@@ -1,15 +1,15 @@
 package controllers;
 
-import beans.NovaCloudCredentials;
 import beans.ServerNodesPoolStats;
-import clouds.base.CloudServer;
 import controllers.compositions.AdminUserCheck;
 import controllers.compositions.UserCheck;
 import models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import play.libs.Json;
-import play.mvc.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
 import server.ApplicationContext;
 import server.ServerBootstrapper;
 import views.html.widgets.dashboard.serverNodePool;
@@ -47,10 +47,12 @@ public class UserPoolController extends Controller {
     public static Result getAllServers( String authToken, String project, String key, String secretKey )
     {
         ServerBootstrapper serverBootstrapper = ApplicationContext.get().getServerBootstrapper();
+/*
         List<CloudServer> servers = serverBootstrapper.getAllMachines( new NovaCloudCredentials().setProject(project).setKey(key).setSecretKey(secretKey));
         for (CloudServer server : servers) {
 
         }
+*/
         List<ServerNode> list = ServerNode.find.all();
         logger.debug("list of server nodes:\n{}", list);
         return ok( Json.toJson(list) );

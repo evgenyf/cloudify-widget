@@ -2,6 +2,7 @@ package beans;
 
 import beans.config.CloudProvider;
 import beans.config.Conf;
+import utils.StringUtils;
 
 import javax.inject.Inject;
 
@@ -81,7 +82,7 @@ public class NovaCloudCredentials implements  CloudCredentials {
 
     @Override
     public String getIdentity() {
-        return project + ":" + key;
+        return !StringUtils.isEmpty( project ) ? project + ":" + key : key;
     }
 
     @Override

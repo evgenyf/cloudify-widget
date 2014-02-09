@@ -19,6 +19,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 
+import beans.NovaContext;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import org.apache.commons.io.FileUtils;
@@ -38,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import server.ApplicationContext;
-import beans.ServerBootstrapperImpl.NovaContext;
 import beans.config.ServerConfig;
 import beans.config.ServerConfig.CloudBootstrapConfiguration;
 import clouds.base.CloudServer;
@@ -172,7 +172,7 @@ public class CloudifyUtils {
 	 * @param key HP cloud API key.
 	 * @return the HP lClouds compute context.
      *
-     * TODO : unify this with {@link beans.ServerBootstrapperImpl.NovaContext}
+     * TODO : unify this with {@link beans.NovaContext}
      *
 	 */
 	public static ComputeServiceContext createJcloudsContext(String project, String key, String secretKey ) {

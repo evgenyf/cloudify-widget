@@ -20,6 +20,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,6 @@ extends Model
 	@XStreamAsAttribute
 	private String serverId;
 
-
     @OneToOne
     private Lead lead;
 
@@ -102,6 +102,7 @@ extends Model
     public String advancedParams = null;
 
     @JsonIgnore
+
     @OneToMany(mappedBy="serverNode", cascade = CascadeType.REMOVE)
     public List<ServerNodeEvent> events = new LinkedList<ServerNodeEvent>();
     
@@ -113,18 +114,38 @@ extends Model
 
 	public ServerNode( ) {
 
-	} 
+	}
 
-	public ServerNode( CloudServer srv )
-	{
-		this.serverId  = srv.getId();
+    public ServerNode(NodeMetadata nodeMetadata, String advancedParams ) {
+        this( nodeMetadata.getId(),
+              nodeMetadata.getPublicAddresses().isEmpty() ?  "" : nodeMetadata.getPublicAddresses().iterator().next(),
+              nodeMetadata.getPrivateAddresses().isEmpty() ? "" : nodeMetadata.getPrivateAddresses().iterator().next() );
+        this.advancedParams = advancedParams;
+    }
+
+
+    public ServerNode( CloudServer srv )
+    {
+        this.serverId  = srv.getId();
         Utils.ServerIp serverIp = Utils.getServerIp( srv );
         publicIP = serverIp.publicIp;
         privateIP = serverIp.privateIp;
+    }
 
+	public ServerNode( String serverId, String publicIp, String privateIp )
+	{
+		this.serverId  = serverId;
+        Utils.ServerIp serverIp = new Utils.ServerIp();
+        serverIp.privateIp = privateIP;
+        serverIp.publicIp = publicIP;
+
+        this.publicIP = publicIp;
+        this.privateIP = privateIp;
 	}
 
-	public String getNodeId() // guy - it is dangerous to call this getId as it looks like the getter of "long id"
+
+
+    public String getNodeId() // guy - it is dangerous to call this getId as it looks like the getter of "long id"
 	{
 		return serverId;
 	}

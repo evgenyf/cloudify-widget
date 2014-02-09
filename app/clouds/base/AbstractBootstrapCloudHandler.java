@@ -99,6 +99,10 @@ abstract public class AbstractBootstrapCloudHandler implements BootstrapCloudHan
 	abstract protected AdvancedParams getAdvancedParameters( ServerNode serverNode );
 	
 	abstract protected ComputeServiceContext createComputeServiceContext( AdvancedParams advancedParams );
+
+    public ComputeServiceContext createComputeServiceContext( ServerNode serverNode ){
+        return createComputeServiceContext( getAdvancedParameters( serverNode ) );
+    }
 	
     public static class MachineNamePrefixPredicate implements Predicate<ComputeMetadata>{
     	

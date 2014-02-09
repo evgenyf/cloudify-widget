@@ -68,7 +68,7 @@ public class VirtualGuestToReducedNodeMetaData extends VirtualGuestToNodeMetadat
 
     @Override
     public NodeMetadata apply(final VirtualGuest from) {
-        logger.info("applying");
+        logger.info("applying VirtualGuest - start....");
         // convert the result object to a jclouds NodeMetadata
         NodeMetadataBuilder builder = new NodeMetadataBuilder();
         builder.ids(from.getId() + "");
@@ -82,6 +82,8 @@ public class VirtualGuestToReducedNodeMetaData extends VirtualGuestToNodeMetadat
             builder.publicAddresses(ImmutableSet.<String> of(from.getPrimaryIpAddress()));
         if (from.getPrimaryBackendIpAddress() != null)
             builder.privateAddresses(ImmutableSet.<String> of(from.getPrimaryBackendIpAddress()));
-        return builder.build();
+        NodeMetadata nodeMetadata = builder.build();
+        logger.info("applying - end....");
+        return nodeMetadata;
     }
 }

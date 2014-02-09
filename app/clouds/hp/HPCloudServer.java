@@ -25,13 +25,28 @@ import com.google.common.collect.Multimap;
 public class HPCloudServer implements CloudServer{
 
 	private final Server server;
+    private final String publicIp;
+    private final String privateIp;
 	
 	public HPCloudServer( Server server ){
 		this.server = server;
+
+        Multimap<String,CloudAddress> addressesMap = getAddresses();
+        Collection<CloudAddress> aPrivate = addressesMap.get( "private" );
+        //support hp cloud
+        if( !aPrivate.isEmpty() ){
+            CloudAddress[] addresses = aPrivate.toArray( new CloudAddress[ aPrivate.size() ] );
+            publicIp = addresses[ 1 ].getAddr();
+            privateIp = addresses[ 0 ].getAddr();
+        }
+        else{
+            publicIp = "";
+            privateIp = "";
+        }
 	}
 
-	@Override
-	public Multimap<String, CloudAddress> getAddresses() {
+//	@Override
+	private Multimap<String, CloudAddress> getAddresses() {
 		Multimap<String, Address> addresses = server.getAddresses();
 		Multimap<String, CloudAddress> resultMultimap = ArrayListMultimap.create();
 		
@@ -49,7 +64,17 @@ public class HPCloudServer implements CloudServer{
 		return resultMultimap;
 	}
 
-	@Override
+    @Override
+    public String getPublicAddress() {
+        return publicIp;
+    }
+
+    @Override
+    public String getPrivateAddress() {
+        return privateIp;
+    }
+
+    @Override
 	public String getId() {
 		return server.getId();
 	}
