@@ -4,6 +4,8 @@
 # 2. sysconfig_play - the sysconfig file for the application
 # 3. prod.conf - production configuration
 
+sudo su
+
 echo "installing widget"
 export SETUP_WORKDIR=`pwd`
 echo "My workdir is $SETUP_WORKDIR"
