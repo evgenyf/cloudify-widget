@@ -37,11 +37,11 @@ TYPE=$1
 echo "installing widget for $TYPE"
 
 echo "installing git"
-sudo yum  -y install git
+yum  -y install git
 
 if [ ! -f "$WIDGET_HOME" ];then
     echo "making $WIDGET_HOME"
-    sudo mkdir -p $WIDGET_HOME
+    mkdir -p $WIDGET_HOME
 
     echo "cloning cloudify-widget"
 
@@ -61,6 +61,8 @@ if [ ! -f "$WIDGET_HOME" ];then
         fi
     fi
 
+    echo "removing directory $WIDGET_HOME"
+    rm -Rf $WIDGET_HOME
     echo "cloning git repository from $GIT_LOCATION"
     git clone $GIT_LOCATION $WIDGET_HOME
 
