@@ -4,8 +4,6 @@
 # 2. sysconfig_play - the sysconfig file for the application
 # 3. prod.conf - production configuration
 
-sudo su
-
 echo "installing widget"
 export SETUP_WORKDIR=`pwd`
 echo "My workdir is $SETUP_WORKDIR"
@@ -43,7 +41,7 @@ yum  -y install git
 
 if [ ! -f "$WIDGET_HOME" ];then
     echo "making $WIDGET_HOME"
-    mkdir -p $WIDGET_HOME
+    sudo mkdir -p $WIDGET_HOME
 
     echo "cloning cloudify-widget"
 
