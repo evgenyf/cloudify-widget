@@ -37,7 +37,7 @@ TYPE=$1
 echo "installing widget for $TYPE"
 
 echo "installing git"
-yum  -y install git
+sudo yum  -y install git
 
 if [ ! -f "$WIDGET_HOME" ];then
     echo "making $WIDGET_HOME"
