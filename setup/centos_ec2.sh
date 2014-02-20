@@ -7,12 +7,16 @@ execute(){
 
 echo "clone cloudify-modules"
 
+echo "before install java"
 execute install_java.sh
 
+echo "before install maven"
 execute install_maven.sh
 
+echo "before install cloudify_widget_modules"
 execute install_cloudify_widget_modules.sh
 
+echo "before install mysql"
 execute install_mysql.sh
 
 execute install_nginx.sh
