@@ -373,7 +373,7 @@ public class ServerPoolImpl implements ServerPool
                                 }
                             }
                             else {
-                                logger.info("not creating :: non busy [{}] ; .", getStats().nonBusyServers, undergoingBootstrapCount.get() ,conf.server.pool.maxNodes);
+                                logger.info("not creating :: stats [{}] .", getStats());
                             }
                         } catch (Exception e) {
                             logger.error("ServerPool failed to create a new server node", e);

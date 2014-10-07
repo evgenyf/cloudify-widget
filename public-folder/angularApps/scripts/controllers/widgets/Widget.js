@@ -12,6 +12,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     var recipeProperties = null;
     var advancedDataFromMessage = null;
+    var leadDetails = null;
 
 
     function _postMessage( data ){
@@ -23,12 +24,32 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     WidgetReceiveMessageService.addHandler( 'widget_recipe_properties', function(event){
         $log.info('got new properties for widget', event.data);
+        if ( !Array.isArray(event.data) ){
+            $log.info('converting format');
+            recipeProperties = [];
+            for ( var k in event.data ){
+                if ( event.data.hasOwnProperty(k)) {
+                    recipeProperties.push({'key': k, 'value': event.data[k]});
+                }
+            }
+            $log.info('after format conversion', recipeProperties);
+        }
         recipeProperties = event.data;
+    });
+
+    WidgetReceiveMessageService.addHandler( 'widget_stop' , function(event){
+        $log.info('stopping widget from event', event.data);
+        $scope.stop();
     });
 
     WidgetReceiveMessageService.addHandler( 'widget_play', function(event){
         $log.info('playing widget from event', event.data);
         $scope.play();
+    });
+
+    WidgetReceiveMessageService.addHandler('widget_lead_details', function (event) {
+        $log.info('got lead details', event.data);
+        leadDetails = event.data;
     });
 
     WidgetReceiveMessageService.addHandler( 'widget_advanced_data', function(event){
@@ -70,11 +91,20 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     $scope.widgetStatus = {};
 
+    $scope.$watch('widgetStatus', function () {
+        var data = $scope.widgetStatus;
+        if ( data.hasOwnProperty('status') ){
+            data = data.status;
+        }
+        _postMessage({'name': 'widget_status', 'data': data});
+    }, true);
+
 
     function _setAdvanced( value ){
         $scope.advancedParams[$scope.cloudType] = value;
     }
     function _getAdvanced(){
+
         return $scope.advancedParams[$scope.cloudType];
     }
 
@@ -257,6 +287,11 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
             requestData.executionData.recipeProperties = recipeProperties;
         }
 
+
+        if ( !!leadDetails ){
+            requestData.executionData.leadDetails = leadDetails;
+        }
+
         if ( !!$scope.loginDetails ){
             requestData.executionData.loginDetails = $scope.loginDetails;
         }
@@ -283,7 +318,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     $scope.stop = function(){
         WidgetDbService.remove(); // remove the cookie
-        _postMessage({name: 'widget_stop'});
+        _postMessage({name: 'widget_stopped'});
         $scope.widgetStatus.state = stop;
         try {
             WidgetsService.stop( apiKey, $scope.widgetStatus.instanceId).then(function(){
@@ -395,7 +430,9 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
     $scope.$watch('widget', function( /*newValue*/ ){
         setLanguage();
         updateSocialShares();
-//        $scope.cloudType = ( $scope.widget && $scope.widget.data && $scope.widget.cloudProvider ) || myConf.cloudProvider;
+
+        $scope.cloudType = ( $scope.widget && $scope.widget.data && $scope.widget.data.cloudType ) || (typeof(myConf) !== 'undefined' && !!myConf && myConf.cloudProvider);
+        $log.info('cloud type is ' + $scope.cloudType);
     });
 
 
@@ -578,6 +615,6 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
         }
     };
 
-    _postMessage({name: 'widget_listening'});
+    _postMessage({name: 'widget_loaded'});
 
 });

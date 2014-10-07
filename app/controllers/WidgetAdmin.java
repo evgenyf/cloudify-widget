@@ -134,17 +134,11 @@ public class WidgetAdmin extends GsController
 
             if ( w.mailChimpDetails != null ){
                 if ( w.mailChimpDetails.getId() != null ) {
-                    w.mailChimpDetails.update();
+                    w. mailChimpDetails.update();
                 }
                 w.mailChimpDetails.save();
             }
 
-            if ( w.awsImageShare != null ){
-                if ( w.awsImageShare.getId() != null ){
-                    w.awsImageShare.update();
-                }
-                w.awsImageShare.save();
-            }
 
 
             w.update();
@@ -156,6 +150,15 @@ public class WidgetAdmin extends GsController
                 }
                 w.installFinishedEmailDetails.save();
             }
+
+            if ( w.getAwsImageShare() != null ){
+                w.getAwsImageShare().setWidget(w);
+                if ( w.getAwsImageShare().getId() != null ){
+                    w.getAwsImageShare().update();
+                }
+                w.getAwsImageShare().save();
+            }
+
 
             w.refresh( );
 

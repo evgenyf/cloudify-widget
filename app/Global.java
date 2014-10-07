@@ -196,9 +196,11 @@ public class Global extends GlobalSettings
     public Result onError( Http.RequestHeader requestHeader, Throwable throwable )
     {
 
-        if ( throwable instanceof Response401){
-            return play.mvc.Results.unauthorized();
-        }
+        try {
+            if (throwable.getCause() instanceof Response401) {
+                return play.mvc.Results.unauthorized(throwable.getCause().getMessage());
+            }
+        }catch(Exception e){}
         logger.error(  "experienced error [{}]", Utils.requestToString( requestHeader ), throwable );
 
         // todo : maybe this should be a method implemented in the exception.
@@ -277,7 +279,7 @@ public class Global extends GlobalSettings
             throw new RuntimeException("you need to configure spring.context and spring.profiles");
         }
 
-        logger.info("spring context is at : ["  + contextPath + "]");
+        logger.info("spring context is at : ["  + contextPath + "] and profiles are [" + contextProfiles + "]" );
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext();
         applicationContext.getEnvironment().setActiveProfiles(contextProfiles.split(","));
         applicationContext.setConfigLocation(contextPath);
