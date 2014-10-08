@@ -165,6 +165,15 @@ public class WidgetServerImpl implements WidgetServer
 
         result.setRemote( server.isRemote() ).setHasPemFile(!StringUtils.isEmpty(server.getPrivateKey())); // let UI know this is a remote bootstrap.
 
+        // check if remote server is done due to error
+        if ( bootstrapExecution.isFinished() && server.isRemote() ){
+            if ( bootstrapExecution.getStatus().exitCode != 0 ){
+                result.setState(Status.State.STOPPED);
+                result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList() ) );
+                return result;
+            }
+        }
+
         boolean doneFromEvent = false;
 
         if ( !CollectionUtils.isEmpty(server.events) ){
@@ -205,37 +214,31 @@ public class WidgetServerImpl implements WidgetServer
         if( logger.isDebugEnabled() ){
         	logger.debug("checking if installation finished for {} on the following output {}" , widgetInstance, output );
         }
-        if (widgetInstance != null) {
-            if (doneFromEvent || isFinished(widgetInstance.getRecipeType(), (String) CollectionUtils.last(output))) {
+        if (widgetInstance != null ){
+            if (doneFromEvent || isFinished(widgetInstance.getRecipeType(), (String)CollectionUtils.last(output))){
 
                 // need to figure out the remote service IP for the link
-                if (server.isRemote() && StringUtils.isEmpty(widgetInstance.getServicePublicIp()) && !StringUtils.isEmpty(widgetInstance.getWidget().getConsoleUrlService())) {
+                if ( server.isRemote() && StringUtils.isEmpty( widgetInstance.getServicePublicIp() ) && !StringUtils.isEmpty( widgetInstance.getWidget().getConsoleUrlService() )  ){
                     // find out the service's public IP.
-                    String servicePublicIp = deployManager.getServicePublicIp(widgetInstance);
-                    if (!StringUtils.isEmpty(servicePublicIp)) {
-                        logger.info("found ip at : [{}]", servicePublicIp);
+                    String servicePublicIp = deployManager.getServicePublicIp( widgetInstance );
+                    if ( !StringUtils.isEmpty( servicePublicIp )){
+                        logger.info( "found ip at : [{}]", servicePublicIp );
 
-                    } else {
+                    }else{
                         logger.info("could not find a public ip, defaulting to machine's public ip");
                         servicePublicIp = server.getPublicIP(); // default behavior.
                     }
-                    widgetInstance.setServicePublicIp(servicePublicIp);
-                    widgetInstance.save();
+                    widgetInstance.setServicePublicIp( servicePublicIp );
+                    widgetInstance.save(  );
                 }
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("detected finished installation");
+                if( logger.isDebugEnabled() ){
+                	logger.debug("detected finished installation");
                 }
-                output.add("i18n:installationCompletedSuccessfully");
+                output.add( "i18n:installationCompletedSuccessfully" );
                 result.setCompleted(true);
                 result.setInstanceIsAvailable(Boolean.TRUE);
                 result.setConsoleLink(widgetInstance.getLink());
-            } else if (bootstrapExecution.isFinished() && server.isRemote()) { // check if remote server is done due to error
-                if (bootstrapExecution.getStatus().exitCode != 0) {
-                    result.setState(Status.State.STOPPED);
-                    result.setMessage((String) CollectionUtils.last(bootstrapExecution.getOutputAsList()));
-                    return result;
-                }
             }
         }
 
