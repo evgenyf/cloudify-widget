@@ -166,6 +166,7 @@ public class WidgetServerImpl implements WidgetServer
         result.setRemote( server.isRemote() ).setHasPemFile(!StringUtils.isEmpty(server.getPrivateKey())); // let UI know this is a remote bootstrap.
 
         // check if remote server is done due to error
+        logger.info("setting to STOPPED if remote [{}] and finished [{}] and exit code not 0 [{}]", bootstrapExecution.isFinished(), server.isRemote(), bootstrapExecution.getStatus().exitCode );
         if ( bootstrapExecution.isFinished() && server.isRemote() ){
             if ( bootstrapExecution.getStatus().exitCode != 0 ){
                 result.setState(Status.State.STOPPED);
