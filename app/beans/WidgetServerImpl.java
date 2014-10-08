@@ -230,7 +230,12 @@ public class WidgetServerImpl implements WidgetServer
                 result.setCompleted(true);
                 result.setInstanceIsAvailable(Boolean.TRUE);
                 result.setConsoleLink(widgetInstance.getLink());
-            }
+            } else if (bootstrapExecution.isFinished() && server.isRemote() ){ // check if remote server is done due to error
+                    if ( bootstrapExecution.getStatus().exitCode != 0 ){
+                        result.setState(Status.State.STOPPED);
+                        result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList()) );
+                    }
+                }
         }
 
         result.setState(Status.State.RUNNING);
