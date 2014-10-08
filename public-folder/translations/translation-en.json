@@ -11,5 +11,6 @@
     "loginLastName" : "Last Name",
     "loginEmail" : " Email",
     "loginSubmit" : "Submit",
-    "registerWithGoogleId" : "Register using Google ID"
+    "registerWithGoogleId" : "Register using Google ID",
+    "operationFailed" : "Operation failed."
 }

@@ -172,7 +172,7 @@ public class WidgetServerImpl implements WidgetServer
         if ( bootstrapExecution.isFinished() && server.isRemote() ){
             if ( bootstrapExecution.getStatus().exitCode != 0 ){
                 result.setState(Status.State.STOPPED);
-                result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList() ) );
+                result.setMessage( "i18n:operationFailed" );
                 return result;
             }
         }
@@ -180,7 +180,7 @@ public class WidgetServerImpl implements WidgetServer
         if ( installExecution.isFinished() && server.isRemote() ){
             if ( installExecution.getStatus().exitCode != 0 ){
                 result.setState(Status.State.STOPPED);
-                result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList() ) );
+                result.setMessage( "i18n:operationFailed" );
                 return result;
             }
         }
