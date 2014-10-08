@@ -25,6 +25,16 @@ public interface ScriptExecutor{
      * good when you want to be able to query if execution finished after you lost a reference to it.
      */
     public IAsyncExecution getBootstrapExecution( ServerNode serverNode );
+
+    /**
+     *
+     * @param serverNode - the node we are installing on
+     * @return a populated async execution without writing/executing it.
+     *
+     * good when you want to be able to query if execution finished after you lost a reference to it.
+     * used for solo installation in case it failed.
+     */
+    public IAsyncExecution getInstallExecution( ServerNode serverNode );
 	/**
 	 * used for running install and uninstall of applications
 	 * @param cmdLine

@@ -160,15 +160,25 @@ public class WidgetServerImpl implements WidgetServer
         // NOTE - bootstrap and install write to the same file.. so it is enough to request only bootstrap execution.
         // this is not a hack, the interface is just not intuitive to suggest this.
         IAsyncExecution bootstrapExecution = scriptExecutor.getBootstrapExecution(server);// need to sort out the cache before we decide if the installation finished.
+        IAsyncExecution installExecution = scriptExecutor.getInstallExecution(server);
+
 
         result.setRawOutput( bootstrapExecution.getOutputAsList() );
 
         result.setRemote( server.isRemote() ).setHasPemFile(!StringUtils.isEmpty(server.getPrivateKey())); // let UI know this is a remote bootstrap.
 
         // check if remote server is done due to error
-        logger.info("setting to STOPPED if remote [{}] and finished [{}] and exit code not 0 [{}]", bootstrapExecution.isFinished(), server.isRemote(), bootstrapExecution.getStatus().exitCode );
+
         if ( bootstrapExecution.isFinished() && server.isRemote() ){
             if ( bootstrapExecution.getStatus().exitCode != 0 ){
+                result.setState(Status.State.STOPPED);
+                result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList() ) );
+                return result;
+            }
+        }
+
+        if ( installExecution.isFinished() && server.isRemote() ){
+            if ( installExecution.getStatus().exitCode != 0 ){
                 result.setState(Status.State.STOPPED);
                 result.setMessage( (String) CollectionUtils.last(bootstrapExecution.getOutputAsList() ) );
                 return result;

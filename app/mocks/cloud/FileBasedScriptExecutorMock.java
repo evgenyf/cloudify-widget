@@ -51,6 +51,11 @@ public class FileBasedScriptExecutorMock implements ScriptExecutor{
     }
 
     @Override
+    public IAsyncExecution getInstallExecution(ServerNode serverNode) {
+        return null;
+    }
+
+    @Override
     public void runInstallationManagementScript(CommandLine cmdLine, ServerNode server) {
 
     }

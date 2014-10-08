@@ -63,6 +63,17 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
         impl.setDetails(getExecutionDetails( serverNode, executeData.action ));
         return impl;
     }
+
+    @Override
+    public IAsyncExecution getInstallExecution( ServerNode serverNode ){
+        ExecuteData executeData = addCommonProps( new ExecuteData(), serverNode);
+        executeData.action = "install";
+
+        IAsyncExecution impl = new AsyncExecutionImpl();
+
+        impl.setDetails(getExecutionDetails( serverNode, executeData.action ));
+        return impl;
+    }
 	
 	
 	/**
