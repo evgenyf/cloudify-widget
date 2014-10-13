@@ -191,6 +191,7 @@ public class Widget
         private Boolean remote;
         private Boolean hasPemFile;
         private String pemFileContent;
+        private String pemDownloadLink;
 
 
         private WidgetInstance.ConsoleLink consoleLink;
@@ -211,8 +212,13 @@ public class Widget
             this.cloudifyUiIsAvailable = cloudifyUiIsAvailable;
         }
 
-        public String getDownloadPemLink(){
-            return "/backend/widget/" + instanceId + "/pem";
+
+        public String getPemDownloadLink() {
+            return pemDownloadLink;
+        }
+
+        public void setPemDownloadLink(String pemDownloadLink) {
+            this.pemDownloadLink = pemDownloadLink;
         }
 
         public Boolean getCompleted() {

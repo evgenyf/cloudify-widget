@@ -463,6 +463,8 @@ public class Application extends GsController
             Widget.Status wstatus =
 						ApplicationContext.get().getWidgetServer().getWidgetStatus(serverNode);
 
+            wstatus.setPemDownloadLink(routes.Application.downloadPemFile(serverNode.getId().toString()).absoluteURL(request()));
+
 			return statusToResult(wstatus);
 		}catch(ServerException ex)
 		{
