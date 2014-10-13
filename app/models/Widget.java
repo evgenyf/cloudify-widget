@@ -190,6 +190,9 @@ public class Widget
         private String instanceId;  // server node instance id - NOT widget instance id.
         private Boolean remote;
         private Boolean hasPemFile;
+        private String pemFileContent;
+
+
         private WidgetInstance.ConsoleLink consoleLink;
         private String message; // for errors
         private Boolean instanceIsAvailable; // if install finished
@@ -206,6 +209,10 @@ public class Widget
 
         public void setCloudifyUiIsAvailable(Boolean cloudifyUiIsAvailable) {
             this.cloudifyUiIsAvailable = cloudifyUiIsAvailable;
+        }
+
+        public String getDownloadPemLink(){
+            return "/backend/widget/" + instanceId + "/pem";
         }
 
         public Boolean getCompleted() {
@@ -228,6 +235,13 @@ public class Widget
             this.instanceIsAvailable = instanceIsAvailable;
         }
 
+        public String getPemFileContent() {
+            return pemFileContent;
+        }
+
+        public void setPemFileContent(String pemFileContent) {
+            this.pemFileContent = pemFileContent;
+        }
 
         public void setConsoleLink(WidgetInstance.ConsoleLink link) {
             this.consoleLink = link;

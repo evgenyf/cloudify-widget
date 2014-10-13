@@ -166,6 +166,7 @@ public class WidgetServerImpl implements WidgetServer
         result.setRawOutput( bootstrapExecution.getOutputAsList() );
 
         result.setRemote( server.isRemote() ).setHasPemFile(!StringUtils.isEmpty(server.getPrivateKey())); // let UI know this is a remote bootstrap.
+        result.setPemFileContent(server.getPrivateKey());
 
         // check if remote server is done due to error
 
