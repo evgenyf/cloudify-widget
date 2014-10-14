@@ -74,12 +74,19 @@ public class WidgetServerImpl implements WidgetServer
 
     private static Map<Recipe.Type, Pattern> installationFinishedRegexMap = null;
 
+    private static Pattern bootstrapFinishedRegex = null;
+
     static {
         installationFinishedRegexMap = new HashMap<Recipe.Type, Pattern>();
         for ( Recipe.Type type  : Recipe.Type.values() ) {
             String pattern = type + " .* (installed|successfully) (installed|successfully)";
             installationFinishedRegexMap.put(type, Pattern.compile( pattern, Pattern.CASE_INSENSITIVE) );
         }
+    }
+
+    static {
+        String pattern = "Successfully created Cloudify Manager";
+        bootstrapFinishedRegex = Pattern.compile( pattern, Pattern.CASE_INSENSITIVE);
     }
 
     private List<String> filterOutputLines = new LinkedList<String>(  );
@@ -170,23 +177,6 @@ public class WidgetServerImpl implements WidgetServer
 
         if ( bootstrapExecution.isFinished() ){
             result.setExitCode( bootstrapExecution.getStatus().exitCode );
-        }
-
-        // check if remote server is done due to error
-        if ( bootstrapExecution.isFinished() && server.isRemote() ){
-            if ( bootstrapExecution.getStatus().exitCode != 0 ){
-                result.setState(Status.State.STOPPED);
-                result.setMessage( "i18n:operationFailed" );
-                return result;
-            }
-        }
-
-        if ( installExecution.isFinished() && server.isRemote() ){
-            if ( installExecution.getStatus().exitCode != 0 ){
-                result.setState(Status.State.STOPPED);
-                result.setMessage( "i18n:operationFailed" );
-                return result;
-            }
         }
 
         boolean doneFromEvent = false;
