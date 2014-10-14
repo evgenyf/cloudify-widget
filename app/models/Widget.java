@@ -193,6 +193,8 @@ public class Widget
         private String pemFileContent;
         private String pemDownloadLink;
 
+        private Integer exitCode;
+
 
         private WidgetInstance.ConsoleLink consoleLink;
         private String message; // for errors
@@ -212,6 +214,14 @@ public class Widget
             this.cloudifyUiIsAvailable = cloudifyUiIsAvailable;
         }
 
+
+        public Integer getExitCode() {
+            return exitCode;
+        }
+
+        public void setExitCode(Integer exitCode) {
+            this.exitCode = exitCode;
+        }
 
         public String getPemDownloadLink() {
             return pemDownloadLink;
