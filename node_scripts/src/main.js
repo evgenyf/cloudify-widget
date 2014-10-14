@@ -56,7 +56,10 @@ exports.doMain = function(){
         function createExecutionDir( _opts, callback ){
             opts = _opts;
             logger.info('creating execution dir');
+            // change logger name
+            logger = require('log4js').getLogger('executor-' +  opts.serverNodeId);
             outputWriter = new services.taskOutputWriter.Writer( conf.directories.executingDirectory, opts.serverNodeId, opts.action );
+
             outputWriter.createDir();
             callback();
         },
