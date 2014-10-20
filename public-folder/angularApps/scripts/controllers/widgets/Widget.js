@@ -57,6 +57,11 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
         advancedDataFromMessage = event.data;
     });
 
+    WidgetReceiveMessageService.addHandler( 'widget_login_details', function(event){
+        $log.info('got new login details for widget', event.data);
+        updateLoginDetails( event.data );
+    });
+
     $scope.$watch(function () {
         return advancedDataFromMessage;
     }, function () {
@@ -77,13 +82,17 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     var popupWindow = null;
 
+    function updateLoginDetails( loginDetails ){
+        $scope.loginDetails = loginDetails;
+    }
+
     $scope.loginDone = function( loginDetails ){
         $log.info('login done', loginDetails );
         if ( popupWindow !== null ){
             popupWindow.close();
         }
 
-        $scope.loginDetails = loginDetails;
+        updateLoginDetails($scope.loginDetails);
         $timeout(function(){$scope.play();}, 0);
     };
 

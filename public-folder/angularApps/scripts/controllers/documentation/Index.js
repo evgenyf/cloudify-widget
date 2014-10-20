@@ -29,7 +29,7 @@ angular.module('WidgetApp').controller('DocsIndexCtrl', function ( $scope, $rout
 
         {
             'name' : 'Message I Post',
-            'data' :['widget_recipe_properties','widget_play','widget_advanced_data']
+            'data' :['widget_recipe_properties','widget_play','widget_advanced_data', 'widget_login_details']
         },
         {
             'name' : 'Messages I Receive',
