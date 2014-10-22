@@ -4,9 +4,12 @@ import java.io.File;
 import java.util.*;
 
 import beans.config.Conf;
+import cloudify.widget.allclouds.executiondata.ExecutionDataModel;
+import cloudify.widget.common.MandrillSender;
 import cloudify.widget.common.asyncscriptexecutor.*;
 import models.ServerNode;
 
+import models.WidgetInstance;
 import org.apache.commons.exec.CommandLine;
 
 import org.slf4j.Logger;
@@ -122,40 +125,45 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
 
         // add application name and service for mail sending
 
-//        if ( serverNode.getWidget() != null && serverNode.getWidget().sendEmail && !StringUtils.isEmptyOrSpaces(serverNode.getWidget().loginsString) ) {
-//            logger.info("adding properties for sending email");
-//            try {
-//                result.serviceName = serverNode.getWidget().getConsoleUrlService();
-//                result.applicationName = serverNode.getWidget().getRecipeName();
-//
-//                result.mandrill.apiKey = serverNode.getWidget().installFinishedEmailDetails.apiKey;
-//                result.mandrill.templateName = serverNode.getWidget().installFinishedEmailDetails.templateName;
-//
-//                result.mandrill.data.name.setContent( serverNode.widgetInstanceUserDetails.name + " " + serverNode.widgetInstanceUserDetails.lastName );
-//                result.mandrill.data.firstName.setContent( serverNode.widgetInstanceUserDetails.name  );
-//                result.mandrill.data.lastName.setContent(serverNode.widgetInstanceUserDetails.lastName);
-//                result.mandrill.data.link.setContent( serverNode.getWidget().getConsoleURL() );
-//                result.mandrill.data.linkTitle.setContent(serverNode.getWidget().getConsoleName());
-//
-//
-//                result.mandrill.to.add(
-//                        new ExecuteData.MandrillEmailAddressItem(serverNode.widgetInstanceUserDetails.getEmail(), serverNode.widgetInstanceUserDetails.getName() , "to")
-//                );
-//
-//                String csvBccEmails = serverNode.getWidget().installFinishedEmailDetails.csvBccEmails;
-//                if (!StringUtils.isEmptyOrSpaces(csvBccEmails)) {
-//                    for (String item : csvBccEmails.split(",")) {
-//                        if (!StringUtils.isEmptyOrSpaces(item)) {
-//                            result.mandrill.to.add(new ExecuteData.MandrillEmailAddressItem(item, "bcc address", "bcc"));
-//                        }
-//                    }
-//                }
-//
-//                result.sendEmail = serverNode.getWidget().sendEmail;
-//            }catch(Exception e){
-//                logger.info("error while trying to set properties for sending email");
-//            }
-//        }
+        ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
+        if ( serverNode.getWidget() != null && serverNode.getWidget().installFinishedEmailDetails != null && serverNode.getWidget().installFinishedEmailDetails.isEnabled() && executionDataModel.has(ExecutionDataModel.JsonKeys.LOGIN_DETAILS)  ) {
+            logger.info("adding properties for sending email");
+            try {
+                result.serviceName = serverNode.getWidget().getConsoleUrlService();
+                result.applicationName = serverNode.getWidget().getRecipeName();
+
+                MandrillSender.MandrillEmailDetails mandrillDetails = serverNode.getWidget().installFinishedEmailDetails.getMandrillDetails();
+                result.mandrill.apiKey = mandrillDetails.mandrillApiKey;
+                result.mandrill.templateName = mandrillDetails.templateName;
+
+                ExecutionDataModel.LoginDetails loginDetails = executionDataModel.getLoginDetails();
+
+                // todo:  this is a copy paste. we should refactor
+                WidgetInstance.ConsoleLink instanceLink = serverNode.getWidgetInstance().getLink();
+                String linkTitle = instanceLink.title;
+                if ( mandrillDetails.templateContent.containsKey("linkTitle") ){
+                    linkTitle = mandrillDetails.templateContent.get("linkTitle");
+                }
+                String linkUrl = instanceLink.url.replace("$HOST", serverNode.getPublicIP());
+                String linkStr = "<a href=\"" + linkUrl + "\">" + linkTitle + "</a>";
+
+                result.mandrill.data.name.setContent(loginDetails.name + ' ' + loginDetails.lastName);
+                result.mandrill.data.firstName.setContent( loginDetails.name  );
+                result.mandrill.data.lastName.setContent(loginDetails.lastName);
+                result.mandrill.data.publicIp.setContent(serverNode.getPublicIP());
+                result.mandrill.data.link.setContent( serverNode.getWidget().getConsoleURL() );
+                result.mandrill.data.linkTitle.setContent( serverNode.getWidget().getConsoleName() );
+
+
+                result.mandrill.to.add(
+                        new ExecuteData.MandrillEmailAddressItem(serverNode.widgetInstanceUserDetails.getEmail(), serverNode.widgetInstanceUserDetails.getName() , "to")
+                );
+
+                result.sendEmail = true;
+            }catch(Exception e){
+                logger.info("error while trying to set properties for sending email");
+            }
+        }
         return result;
     }
 
