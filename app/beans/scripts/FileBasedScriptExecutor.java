@@ -161,7 +161,7 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
 
                 result.sendEmail = true;
             }catch(Exception e){
-                logger.info("error while trying to set properties for sending email");
+                logger.info("error while trying to set properties for sending email",e);
             }
         }
         return result;

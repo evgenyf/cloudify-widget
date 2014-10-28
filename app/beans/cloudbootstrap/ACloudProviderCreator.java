@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import play.libs.Json;
 import server.ApplicationContext;
+import utils.CollectionUtils;
 import utils.ResourceManagerFactory;
 
 import java.io.File;
@@ -70,8 +71,13 @@ public abstract class ACloudProviderCreator implements ICloudProviderCreator
             throw e;
         } catch (Exception e ){
             logger.error("failed creating cloud provider",e);
-
-            serverNode.errorEvent("Missing cloud provider details").save();
+            try {
+                if (serverNode.events == null || CollectionUtils.size(serverNode.events) == 0) {
+                    serverNode.errorEvent("Missing cloud provider details").save();
+                }
+            }catch( Exception ex ){
+                logger.error("unable to set event on the server node ",e);
+            }
             throw new RuntimeException(e);
         }
     }

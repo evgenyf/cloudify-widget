@@ -7,7 +7,7 @@ import cloudify.widget.ec2.Ec2ImageShare;
 import cloudify.widget.ec2.Ec2KeyPairGenerator;
 import cloudify.widget.ec2.executiondata.AwsEc2ExecutionModel;
 import models.AwsImageShare;
-import models.ServerNode;
+import models.ServerNodeEvent;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -31,6 +31,7 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
         AwsImageShare imageShareDetails = getImageShareDetails();
         if ( imageShareDetails == null || !imageShareDetails.isValid()){
             logger.info("no image details to share, or not enough details to share");
+            serverNode.createEvent("missing image to share details", ServerNodeEvent.Type.ERROR).save();
             return;
         }
 
@@ -45,6 +46,7 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
                 shareImage(accountId);
 
             } catch (Exception e) {
+                serverNode.createEvent("unable to share image. please register to marketplace", ServerNodeEvent.Type.ERROR).save();
                 throw new RuntimeException("unable to share image", e);
             }
         } else {
