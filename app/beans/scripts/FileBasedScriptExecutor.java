@@ -147,6 +147,10 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
                 String linkUrl = instanceLink.url.replace("$HOST", serverNode.getPublicIP());
                 String linkStr = "<a href=\"" + linkUrl + "\">" + linkTitle + "</a>";
 
+                if ( result.mandrill.data == null ){
+                    result.mandrill.data = new ExecuteData.MandrillData();
+                }
+
                 result.mandrill.data.name.setContent(loginDetails.name + ' ' + loginDetails.lastName);
                 result.mandrill.data.firstName.setContent( loginDetails.name  );
                 result.mandrill.data.lastName.setContent(loginDetails.lastName);
