@@ -99,7 +99,7 @@ exports.doMain = function(){
 
             services.postExecution.resolveIp( opts, function( error, resolvedIp ){
 
-                services.postExecution.sendEmail( opts, callback );
+                services.postExecution.sendEmail( opts, { 'serviceIp' : resolvedIp }, callback );
 
             });
 
