@@ -128,7 +128,7 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
             logger.info("adding properties for sending email");
             try {
                 result.serviceName = serverNode.getWidget().getConsoleUrlService();
-                result.applicationName = serverNode.getWidget().getRecipeName();
+                result.applicationName = serverNode.getWidget().getConsoleUrlApplication();
 
                 MandrillSender.MandrillEmailDetails mandrillDetails = serverNode.getWidget().installFinishedEmailDetails.getMandrillDetails();
                 result.mandrill.apiKey = mandrillDetails.mandrillApiKey;

@@ -159,6 +159,8 @@ public class Widget
     //
     private String consoleUrlService;
 
+    private String consoleUrlApplication;
+
 
     @JsonIgnore
 	@OneToMany(cascade=CascadeType.ALL, mappedBy = "widget")
@@ -906,6 +908,14 @@ public class Widget
     public void setConsoleUrlService( String consoleUrlService )
     {
         this.consoleUrlService = consoleUrlService;
+    }
+
+    public String getConsoleUrlApplication() {
+        return consoleUrlApplication;
+    }
+
+    public void setConsoleUrlApplication(String consoleUrlApplication) {
+        this.consoleUrlApplication = consoleUrlApplication;
     }
 
     public String getRecipeName()
