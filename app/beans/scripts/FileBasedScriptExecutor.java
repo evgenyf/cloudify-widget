@@ -124,7 +124,7 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
         // add application name and service for mail sending
 
         ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
-        if ( serverNode.getWidget() != null && serverNode.getWidget().installFinishedEmailDetails != null && serverNode.getWidget().installFinishedEmailDetails.isEnabled() && executionDataModel.has(ExecutionDataModel.JsonKeys.LOGIN_DETAILS)  ) {
+        if ( serverNode.getWidget() != null && serverNode.getWidget().getInstallFinishedEmailDetails() != null && serverNode.getWidget().getInstallFinishedEmailDetails().isEnabled() && executionDataModel.has(ExecutionDataModel.JsonKeys.LOGIN_DETAILS)  ) {
             logger.info("adding properties for sending email");
             try {
                 result.serviceName = serverNode.getWidget().getConsoleUrlService();

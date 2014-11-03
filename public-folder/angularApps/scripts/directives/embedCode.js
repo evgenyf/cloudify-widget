@@ -17,9 +17,11 @@ angular.module('WidgetApp').directive('embedCode', function ($window, $compile, 
             var contents = $element.html();
 
             scope.$watch('widget', function (newValue) {
+                $element.empty();
                 if (!!newValue) {
 //                     <iframe src="http://localhost:9000/widget/widget?apiKey=291edd87-c17e-422c-9bdc-f5686b23a6ed&amp;showAdvanced=false&amp;title=BluStratus%201T&amp;origin_page_url=http%3A%2F%2Flocalhost%3A9000%2Fdemos%2F131%2F291edd87-c17e-422c-9bdc-f5686b23a6ed&amp;video_url=%2F%2Fwww.youtube.com%2Fembed%2FL_dNpV7AVc0" scrolling="no" width="600px" height="463px" frameborder="no"></iframe>
                     scope.widgetUrl = $window.location.origin + '/public-folder/angularApps/index.html#/widgets/' + scope.widget.apiKey + '/view?since=' + new Date().getTime();
+                    $element.append($compile(contents)(scope));
                 }
                 $scope.compileToText();
             });

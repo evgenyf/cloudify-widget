@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('WidgetApp').controller('WidgetsViewCtrl', function($scope, WidgetsService, $controller, $log, $location, $routeParams, WidgetThemes  ){
+angular.module('WidgetApp').controller('WidgetsViewCtrl', function($scope, WidgetsService, $controller, $log, $location, $routeParams, WidgetThemes, $window  ){
 
 
     $scope.includePath = 'views/widgets/themes/loading.html';

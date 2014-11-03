@@ -13,6 +13,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
     var recipeProperties = null;
     var advancedDataFromMessage = null;
     var leadDetails = null;
+    var loginDetails = null;
 
 
     function _postMessage( data ){
@@ -82,8 +83,8 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     var popupWindow = null;
 
-    function updateLoginDetails( loginDetails ){
-        $scope.loginDetails = loginDetails;
+    function updateLoginDetails( _loginDetails ){
+        loginDetails = _loginDetails;
     }
 
     $scope.loginDone = function( loginDetails ){
@@ -92,7 +93,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
             popupWindow.close();
         }
 
-        updateLoginDetails($scope.loginDetails);
+        updateLoginDetails(loginDetails);
         $timeout(function(){$scope.play();}, 0);
     };
 
@@ -274,7 +275,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
         } catch(e){
             $log.info('unable to decide on login system.');
         }
-        if ( !!loginsString && !$scope.loginDetails ){
+        if ( !!loginsString && loginDetails ){
             var size = popupWidths[loginsString];
             var left = (screen.width/2)-(size.width/2);
             var top = (screen.height/2)-(size.height/2);
@@ -301,8 +302,8 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
             requestData.executionData.leadDetails = leadDetails;
         }
 
-        if ( !!$scope.loginDetails ){
-            requestData.executionData.loginDetails = $scope.loginDetails;
+        if ( !!loginDetails ){
+            requestData.executionData.loginDetails = loginDetails;
         }
 
 

@@ -24,6 +24,7 @@ angular.module('WidgetApp').controller('PublicDemoCtrl', function ($scope, $loca
 
     $log.info('hello from controlller');
 
+    $scope.page = { loginDetails : {} };
     $scope.properties = [];
     $scope.propertiesMap = {};
     var propertiesChanged = false;
@@ -52,6 +53,13 @@ angular.module('WidgetApp').controller('PublicDemoCtrl', function ($scope, $loca
             }
         });
     }
+
+    $scope.$watch('page.loginDetails', function(newValue, oldValue ){
+        $log.info('posting login details', newValue, oldValue);
+        try {
+            frames[0].postMessage({'name': 'widget_login_details', 'data': $scope.page.loginDetails }, frames[0].location.origin);
+        }catch(e){}
+    }, true);
 
     $scope.$watch('properties', function(){
         $log.info('converting ints for the demo');

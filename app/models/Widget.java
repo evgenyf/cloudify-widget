@@ -459,6 +459,10 @@ public class Widget
         return widget;
     }
 
+    public InstallFinishedEmailDetails getInstallFinishedEmailDetails() {
+        return installFinishedEmailDetails;
+    }
+
     public String getConsoleName() {
         return consoleName;
     }
@@ -993,6 +997,25 @@ public class Widget
 
         return false;
     }
+
+    public boolean hasSecurityGroupData(){
+        try {
+            if ( !StringUtils.isEmptyOrSpaces(data) ){
+                JsonNode parse = Json.parse(data);
+                return parse.has("securityGroup");
+            }
+        }catch(Exception e){
+            logger.error("unable to check if I have cloud provider data", e);
+        }
+        return false;
+    }
+
+//    public WidgetSecurityGroupData getSecurityGroupData(){
+//        if ( hasCloudProviderData() ){
+//            return Json.parse(data).get("securityGroup");
+//        }
+//        return null;
+//    }
 
     @JsonIgnore
     public JsonNode getCloudProvideJson(){
