@@ -9,14 +9,12 @@ import cloudify.widget.common.MandrillSender;
 import cloudify.widget.common.asyncscriptexecutor.*;
 import models.ServerNode;
 
-import models.WidgetInstance;
 import org.apache.commons.exec.CommandLine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import server.ApplicationContext;
-import utils.StringUtils;
 
 public class FileBasedScriptExecutor implements ScriptExecutor{
 	
@@ -137,15 +135,6 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
                 result.mandrill.templateName = mandrillDetails.templateName;
 
                 ExecutionDataModel.LoginDetails loginDetails = executionDataModel.getLoginDetails();
-
-                // todo:  this is a copy paste. we should refactor
-                WidgetInstance.ConsoleLink instanceLink = serverNode.getWidgetInstance().getLink();
-                String linkTitle = instanceLink.title;
-                if ( mandrillDetails.templateContent.containsKey("linkTitle") ){
-                    linkTitle = mandrillDetails.templateContent.get("linkTitle");
-                }
-                String linkUrl = instanceLink.url.replace("$HOST", serverNode.getPublicIP());
-                String linkStr = "<a href=\"" + linkUrl + "\">" + linkTitle + "</a>";
 
                 if ( result.mandrill.data == null ){
                     result.mandrill.data = new ExecuteData.MandrillData();
