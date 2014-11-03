@@ -148,8 +148,9 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
                 result.mandrill.data.linkTitle.setContent( serverNode.getWidget().getConsoleName() );
 
 
+
                 result.mandrill.to.add(
-                        new ExecuteData.MandrillEmailAddressItem(serverNode.widgetInstanceUserDetails.getEmail(), serverNode.widgetInstanceUserDetails.getName() , "to")
+                        new ExecuteData.MandrillEmailAddressItem(loginDetails.email, loginDetails.name + " " + loginDetails.lastName, "to")
                 );
 
                 result.sendEmail = true;
