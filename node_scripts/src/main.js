@@ -29,7 +29,7 @@ exports.doMain = function(){
     async.waterfall([
 
         function initialize( callback ) {
-            logger.info('initializing');
+//            logger.info('initializing');
             exports.initialize();
             callback();
         },
