@@ -14,6 +14,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
     var advancedDataFromMessage = null;
     var leadDetails = null;
     var loginDetails = null;
+    var ec2ExecutionDetails = null;// overrides specific to ec2
 
 
     function _postMessage( data ){
@@ -41,6 +42,11 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
     WidgetReceiveMessageService.addHandler( 'widget_stop' , function(event){
         $log.info('stopping widget from event', event.data);
         $scope.stop();
+    });
+
+    WidgetReceiveMessageService.addHandler( 'widget_ec2_details' , function(event){
+        $log.info('ec2_details widget from event', event.data);
+        ec2ExecutionDetails = event.data;
     });
 
     WidgetReceiveMessageService.addHandler( 'widget_play', function(event){

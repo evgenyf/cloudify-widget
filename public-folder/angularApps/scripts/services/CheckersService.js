@@ -8,4 +8,8 @@ angular.module('WidgetApp').service('CheckersService', function( $http  ) {
     this.checkAwsEc2ImageSharing = function( widget, details ){
         return $http.post('/backend/checkers/widget/'+ widget.id + '/testImageShareController',details);
     };
+
+    this.checkAwsEc2SecurityGroup = function( widget, details){
+        return $http.post('/backend/checkers/widget/' + widget.id + '/testSecurityGroupController', details);
+    };
 });

@@ -93,6 +93,7 @@ angular.module('WidgetApp').controller('WidgetsEditCtrl', function($scope, Widge
         $scope.cloudTypes = result.data;
     });
 
+
     WidgetsService.locales.getLocales().then(function(result){
         $scope.locales = result.data;
     });
@@ -113,7 +114,6 @@ angular.module('WidgetApp').controller('WidgetsEditCtrl', function($scope, Widge
 
 
     function updateWidgetData( widgetData ){
-
         if ( widgetData.hasOwnProperty('data')){
             widgetData = widgetData.data;
         }
@@ -162,19 +162,25 @@ angular.module('WidgetApp').controller('WidgetsEditCtrl', function($scope, Widge
 
     loadRequest.then(onWidgetLoad);
 
-    $scope.$watch('widgetData', function() {
+    $scope.$watch('widgetData', function( /*newValue, oldValue*/ ) {
+
+        delete $scope.widgetData.data; // guy - todo - need to figure out where this field is coming from and nip it at the butt.
+
         $log.info('updating widget data', $scope.widgetData );
 
         $scope.widget.data = JSON.stringify($scope.widgetData);
         $log.info('widget.data is now' , $scope.widget.data);
-    });
-    $scope.$watch(function(){return [$scope.widget,$scope.themes];}, function(){
+    }, true);
+
+
+    var unwatchThemes = $scope.$watch(function(){return [$scope.widget,$scope.themes];}, function(){
         if ( !!$scope.widget && !!$scope.themes && !$scope.widgetData.theme ){
             $scope.widgetData.theme = WidgetsService.themes.getDefault().id;
+            unwatchThemes();
         }
     },true);
 
-    $scope.$watch(function(){return [$scope.widget,$scope.logins];}, function(){
+    var unwatchLogins = $scope.$watch(function(){return [$scope.widget,$scope.logins];}, function(){
         if ( !!$scope.widget && !!$scope.logins ){
             try{
                 var logins = $scope.widget.loginsString && $scope.widget.loginsString.split(',') || '';
@@ -184,27 +190,28 @@ angular.module('WidgetApp').controller('WidgetsEditCtrl', function($scope, Widge
                     if ( !!scopeLogin ){
                         scopeLogin.selected = true;
                     }
+                    unwatchLogins();
                 });
             }catch(e){
                 $log.error('unable to update logins',e);
             }
-
-
         }
     },true);
 
 
-    $scope.$watch(function(){return [$scope.widget,$scope.cloudTypes];}, function(){
+    var unwatchCloudTypes = $scope.$watch(function(){return [$scope.widget,$scope.cloudTypes];}, function(){
         if ( !!$scope.widget && !!$scope.cloudTypes && !$scope.widgetData.cloudType ){
             var cloudTypeId = WidgetsService.cloudTypes.getDefault().id;
             $log.info('setting cloud type to', cloudTypeId );
             $scope.widgetData.cloudType = cloudTypeId;
+            unwatchCloudTypes();
         }
     },true);
 
-    $scope.$watch(function(){return [$scope.widget,$scope.locales];}, function(){
+    var unwatchLocales = $scope.$watch(function(){return [$scope.widget,$scope.locales];}, function(){
         if ( !!$scope.widget && !!$scope.locales && !$scope.widgetData.locale ){
             $scope.widgetData.locale = WidgetsService.locales.getDefault().id;
+            unwatchLocales();
         }
     },true);
 
@@ -288,6 +295,17 @@ angular.module('WidgetApp').controller('WidgetsEditCtrl', function($scope, Widge
         }, function(result){
             toastr.error('error while sharing image', result.data );
             $scope.shareImageTestRunning = false;
+        });
+    };
+
+    $scope.runSecurityGroupTest = function(widget, testSecurityGroup){
+        $scope.securityGroupTestRunning = true;
+        WidgetsService.checkers.checkAwsEc2SecurityGroup( widget, testSecurityGroup).then( function(result){
+            toastr.success('success', result.data);
+            $scope.securityGroupTestRunning = false;
+        }, function(result){
+            toastr.error('error', result.data);
+            $scope.securityGroupTestRunning = false;
         });
     };
 

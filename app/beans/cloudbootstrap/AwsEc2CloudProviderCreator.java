@@ -2,10 +2,9 @@ package beans.cloudbootstrap;
 
 import cloudify.widget.allclouds.executiondata.ExecutionDataModel;
 import cloudify.widget.cli.softlayer.AwsEc2CloudBootstrapDetails;
-import cloudify.widget.ec2.Ec2AccountIdReader;
-import cloudify.widget.ec2.Ec2ImageShare;
-import cloudify.widget.ec2.Ec2KeyPairGenerator;
+import cloudify.widget.ec2.*;
 import cloudify.widget.ec2.executiondata.AwsEc2ExecutionModel;
+import com.amazonaws.services.ec2.model.SecurityGroup;
 import models.AwsImageShare;
 import models.ServerNodeEvent;
 import org.apache.commons.beanutils.BeanUtils;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import utils.StringUtils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -85,24 +85,57 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
 
         // try overriding with execution model
         try {
-            ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
-            if (executionDataModel != null ){
-                AwsEc2ExecutionModel awsEc2ExecutionModel = executionDataModel.getAwsEc2ExecutionModel();
-                if ( awsEc2ExecutionModel != null ) {
-                    if ( !StringUtils.isEmptyOrSpaces(awsEc2ExecutionModel.endpoint) ){
-                        awsImageShare.setEndpoint( awsEc2ExecutionModel.endpoint);
-                    }
+            AwsEc2ExecutionModel awsEc2ExecutionModel = getExecutionModel();
+            if (awsEc2ExecutionModel != null) {
+                if (!StringUtils.isEmptyOrSpaces(awsEc2ExecutionModel.endpoint)) {
+                    awsImageShare.setEndpoint(awsEc2ExecutionModel.endpoint);
+                }
 
-                    if ( !StringUtils.isEmptyOrSpaces(awsEc2ExecutionModel.imageId)){
-                        awsImageShare.setImageId( awsEc2ExecutionModel.imageId);
-                    }
+                if (!StringUtils.isEmptyOrSpaces(awsEc2ExecutionModel.imageId)) {
+                    awsImageShare.setImageId(awsEc2ExecutionModel.imageId);
                 }
             }
-        }catch(Exception e){
-            throw new RuntimeException("unable to override with execution model",e);
+
+        } catch (Exception e) {
+            throw new RuntimeException("unable to override with execution model", e);
         }
 
         return awsImageShare;
+    }
+
+    private AwsEc2ExecutionModel getExecutionModel(){
+        ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
+        if (executionDataModel != null ) {
+            AwsEc2ExecutionModel awsEc2ExecutionModel = executionDataModel.getAwsEc2ExecutionModel();
+            return awsEc2ExecutionModel;
+        }
+        return null;
+    }
+
+    protected void validateSecurityGroup(){
+        try{
+            AwsEc2ExecutionModel executionModel = getExecutionModel();
+            if ( executionModel != null && !StringUtils.isEmptyOrSpaces(executionModel.securityGroupName) ) {
+
+                WidgetSecurityGroupData data = new WidgetSecurityGroupData();
+                data.setName( executionModel.securityGroupName );
+
+                WidgetSecurityGroupData securityGroupData = serverNode.getWidget().getSecurityGroupData();
+                data.setIps(securityGroupData.getIps());
+                data.setPorts(securityGroupData.getPorts());
+
+
+                Ec2SecurityGroup ec2SecurityGroup = new Ec2SecurityGroup(getConnectDetails());
+                List<SecurityGroup> securityGroups = ec2SecurityGroup.getSecurityGroups(data);
+                if ( !ec2SecurityGroup.isSecurityGroupOpen( data, securityGroups ) ){
+                    serverNode.createEvent("security group configuration incomplete. make sure you follow the instructions", ServerNodeEvent.Type.ERROR).save();
+                }
+            }
+        }catch(Exception e){
+            serverNode.createEvent("invalid security group. make sure you follow the instructions", ServerNodeEvent.Type.ERROR).save();
+            throw new RuntimeException("security group from input or configuration is invalid",e);
+        }
+
     }
 
     /**
@@ -122,6 +155,18 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
                 awsImageShare.getImageId(),
                 operation,
                 accountId);
+    }
+
+    private Ec2ConnectDetails getConnectDetails(){
+        if ( bootstrapDetails instanceof AwsEc2CloudBootstrapDetails ){
+            AwsEc2CloudBootstrapDetails awsEc2CloudBootstrapDetails = ( AwsEc2CloudBootstrapDetails) bootstrapDetails;
+            Ec2ConnectDetails connectDetails = new Ec2ConnectDetails();
+            connectDetails.setSecretAccessKey(awsEc2CloudBootstrapDetails.getSecretKey());
+            connectDetails.setAccessId(awsEc2CloudBootstrapDetails.getKey());
+            return connectDetails;
+        }else{
+            throw new RuntimeException("expected AwsEc2CloudBootstrapDetails instead of " + bootstrapDetails.getClass());
+        }
     }
 
     @Override

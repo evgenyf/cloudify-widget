@@ -22,6 +22,7 @@ import javax.persistence.*;
 import beans.Recipe;
 import beans.config.ServerConfig;
 import cloudify.widget.api.clouds.CloudProvider;
+import cloudify.widget.ec2.WidgetSecurityGroupData;
 import com.avaje.ebean.Junction;
 import models.query.QueryConf;
 import org.apache.commons.collections.Predicate;
@@ -31,6 +32,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonRootName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1020,12 +1022,20 @@ public class Widget
         return false;
     }
 
-//    public WidgetSecurityGroupData getSecurityGroupData(){
-//        if ( hasCloudProviderData() ){
-//            return Json.parse(data).get("securityGroup");
-//        }
-//        return null;
-//    }
+    public WidgetSecurityGroupData getSecurityGroupData(){
+        try {
+            if (hasSecurityGroupData()) {
+                JsonNode securityGroup = Json.parse(getData()).get("securityGroup");
+                String s = securityGroup.toString();
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.readValue(s, WidgetSecurityGroupData.class);
+            }
+            return null;
+        }catch(Exception e){
+            logger.info("unable to read security group info",e);
+            return null;
+        }
+    }
 
     @JsonIgnore
     public JsonNode getCloudProvideJson(){

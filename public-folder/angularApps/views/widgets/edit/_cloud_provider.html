@@ -78,6 +78,42 @@ while cloud name, is the name of the folder under "clouds" in cloudify.
 </div>
 
 
+<h2> Aws Security Group </h2>
+
+
+<div class="control-group" ng-class="{'error': !!errorId }">
+    <label class="control-label">IPs CSV (supports CIDR notation - all = 0.0.0.0/0)</label>
+    <div class="controls">
+        <input ng-model="widgetData.securityGroup.ips" ng-list   />
+    </div>
+</div>
+<div class="control-group" ng-class="{'error': !!errorId }">
+    <label class="control-label">CSV list of ports (45,67,89)<abbr class="required_mark" ng-show="required">*</abbr></label>
+    <div class="controls">
+        <input ng-model="widgetData.securityGroup.ports" ng-list/>
+    </div>
+</div>
+
+<h4>Test settings</h4>
+<div class="bg-info explanation">
+    Save the widget. fill out the form and test your configuration.
+</div>
+<div form-field title="Api Key" value="securityGroupTest.apiKey" required="false" tooltip="api key to your ec2 account"></div>
+<div form-field title="Api Secret Key" value="securityGroupTest.apiSecretKey" required="false" tooltip="api secret key to your ec2 account"></div>
+<div form-field title="Security Group Name" value="securityGroupTest.name" required="false" tooltip="security group name to test if valid"></div>
+
+
+<div class="control-group" ng-class="{'error': !!errorId }">
+    <div class="controls">
+        <span ng-show="!!securityGroupTestRunning">
+            <i class="fa fa-cog fa-spin" style="font-size:27px;"></i> Waiting for result
+        </span>
+        <button ng-show="!securityGroupTestRunning" ng-click="runSecurityGroupTest(widget, securityGroupTest)">Run Test</button>
+    </div>
+</div>
+
+
+
 
 
 

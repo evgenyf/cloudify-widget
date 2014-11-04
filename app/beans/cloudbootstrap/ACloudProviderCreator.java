@@ -60,6 +60,7 @@ public abstract class ACloudProviderCreator implements ICloudProviderCreator
         logger.info("creating cloud provider for [{}]", serverNode.toDebugString());
         try {
             init(serverNode);
+
             prepareCloudAccount();
             generateFolder();
             createPrivateKey();
@@ -81,6 +82,8 @@ public abstract class ACloudProviderCreator implements ICloudProviderCreator
             throw new RuntimeException(e);
         }
     }
+
+    protected void validateSecurityGroup(){}
 
 
     protected void init( ServerNode serverNode ){
