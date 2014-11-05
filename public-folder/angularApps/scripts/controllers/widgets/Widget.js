@@ -312,6 +312,10 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
             requestData.executionData.loginDetails = loginDetails;
         }
 
+        if ( !!ec2ExecutionDetails ){
+            requestData.executionData.ec2ExecutionDetails = ec2ExecutionDetails;
+        }
+
 
         WidgetsService.play(  apiKey,  requestData )
             .then(function( result ){
