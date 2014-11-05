@@ -60,7 +60,7 @@ public abstract class ACloudProviderCreator implements ICloudProviderCreator
         logger.info("creating cloud provider for [{}]", serverNode.toDebugString());
         try {
             init(serverNode);
-
+            validateSecurityGroup();
             prepareCloudAccount();
             generateFolder();
             createPrivateKey();
