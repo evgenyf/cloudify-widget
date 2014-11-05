@@ -45,7 +45,7 @@ angular.module('WidgetApp').directive('videoContainer', function ($sce) {
                 scope.youkuKey  = getYoukuVideoKey(scope.url);
                 scope.youtubeKey= getYoutubeVideoKey(scope.url);
 
-                scope.youkuUrl = $sce.trustAsResourceUrl('https://player.youku.com/embed/' + scope.youkuKey );
+                scope.youkuUrl = $sce.trustAsResourceUrl('http://player.youku.com/embed/' + scope.youkuKey );
                 scope.youtubeUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/' + scope.youtubeKey );
             });
 

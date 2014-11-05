@@ -8,14 +8,8 @@ upstream my-backend {
 }
 
 
-
 server{
-    listen 80;
-    server_name __domain_name__ __staging_name__;
-    return 301 https://$server_name$request_uri;
-}
-
-server{
+    list 80;
     listen 443 ssl;
     server_name __domain_name__ __staging_name__;
       ssl_certificate               /etc/certificates/cloudify-widget.chained.crt;
