@@ -83,7 +83,9 @@ public abstract class ACloudProviderCreator implements ICloudProviderCreator
         }
     }
 
-    protected void validateSecurityGroup(){}
+    protected void validateSecurityGroup(){
+        logger.info("this is abstract cloud provider. security group validation not implemented for this class");
+    }
 
 
     protected void init( ServerNode serverNode ){

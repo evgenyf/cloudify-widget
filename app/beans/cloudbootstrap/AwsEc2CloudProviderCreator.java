@@ -118,6 +118,7 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
     }
 
     protected void validateSecurityGroup(){
+        logger.info("about to validate security group");
         try{
             AwsEc2ExecutionModel executionModel = getExecutionModel();
             if ( executionModel != null && !StringUtils.isEmptyOrSpaces(executionModel.securityGroupName) ) {
