@@ -104,10 +104,15 @@ public class AwsEc2CloudProviderCreator extends ACloudProviderCreator {
     }
 
     private AwsEc2ExecutionModel getExecutionModel(){
-        ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
-        if (executionDataModel != null ) {
-            AwsEc2ExecutionModel awsEc2ExecutionModel = executionDataModel.getAwsEc2ExecutionModel();
-            return awsEc2ExecutionModel;
+        try {
+            ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
+            if (executionDataModel != null) {
+                AwsEc2ExecutionModel awsEc2ExecutionModel = executionDataModel.getAwsEc2ExecutionModel();
+                return awsEc2ExecutionModel;
+            }
+        }catch(Exception e){
+            serverNode.createEvent("unable to parse ec2 execution details. please notify us about this problem. " + e.getMessage(), ServerNodeEvent.Type.ERROR).save();
+            throw new RuntimeException("failed on parsing execution model",e);
         }
         return null;
     }
