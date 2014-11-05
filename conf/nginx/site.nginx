@@ -9,7 +9,7 @@ upstream my-backend {
 
 
 server{
-    list 80;
+    listen 80;
     listen 443 ssl;
     server_name __domain_name__ __staging_name__;
       ssl_certificate               /etc/certificates/cloudify-widget.chained.crt;
