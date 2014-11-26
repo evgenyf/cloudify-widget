@@ -28,11 +28,11 @@ angular.module('WidgetApp').controller('DocsIndexCtrl', function ( $scope, $rout
     $scope.messages = [
 
         {
-            'name' : 'Message I Post',
-            'data' :['widget_recipe_properties','widget_play','widget_advanced_data', 'widget_login_details']
+            'name' : 'Message I Receive',
+            'data' :['widget_recipe_properties','widget_play','widget_stop','widget_advanced_data', 'widget_login_details']
         },
         {
-            'name' : 'Messages I Receive',
+            'name' : 'Messages I Post',
             'data' : ['widget_stopped', 'widget_loaded']
         }
 
