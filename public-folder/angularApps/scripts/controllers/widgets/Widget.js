@@ -40,7 +40,13 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
     });
 
     WidgetReceiveMessageService.addHandler( 'widget_stop' , function(event){
+
+        if ( !event.data ){
+            event.data = { 'skipConfirmation' : false }; // default value
+        }
+
         $log.info('stopping widget from event', event.data);
+
         $scope.stop( event.data.skipConfirmation );
     });
 
