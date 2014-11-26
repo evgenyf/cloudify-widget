@@ -116,9 +116,11 @@ angular.module('WidgetApp').service('WidgetsService', function( $http, $log, $co
 
     };
 
-    this.stop = function( apiKey, instanceId ){
-        if (!confirm('Are you sure you want to stop the instance?')) {
-            return;
+    this.stop = function( apiKey, instanceId, skipConfirm ){
+        if ( !skipConfirm ) {
+            if (!confirm('Are you sure you want to stop the instance?')) {
+                return;
+            }
         }
 
         if ( !!instanceId ) {

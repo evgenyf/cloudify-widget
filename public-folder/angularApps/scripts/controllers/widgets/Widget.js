@@ -41,7 +41,7 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
 
     WidgetReceiveMessageService.addHandler( 'widget_stop' , function(event){
         $log.info('stopping widget from event', event.data);
-        $scope.stop();
+        $scope.stop( event.data.skipConfirmation );
     });
 
     WidgetReceiveMessageService.addHandler( 'widget_ec2_details' , function(event){
@@ -336,12 +336,12 @@ angular.module('WidgetApp').controller('WidgetCtrl',function ($scope, $timeout, 
             });
     };
 
-    $scope.stop = function(){
+    $scope.stop = function( skipConfirm ){
         WidgetDbService.remove(); // remove the cookie
         _postMessage({name: 'widget_stopped'});
         $scope.widgetStatus.state = stop;
         try {
-            WidgetsService.stop( apiKey, $scope.widgetStatus.instanceId).then(function(){
+            WidgetsService.stop( apiKey, $scope.widgetStatus.instanceId, skipConfirm ).then(function(){
                 $log.info('stopped successfully');
             }, function(result){
                 $log.error('did not stop. got error', result.data);
