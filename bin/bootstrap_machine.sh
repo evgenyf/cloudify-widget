@@ -33,6 +33,8 @@ init(){
 
     echo Setting sudo privileged mode
     sudo sed -i 's/^Defaults.*requiretty/#&/g' /etc/sudoers
+
+    yum install -y unzip
 }
 
 install_java(){
