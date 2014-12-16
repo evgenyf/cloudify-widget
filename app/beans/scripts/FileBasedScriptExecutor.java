@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import server.ApplicationContext;
+import utils.StringUtils;
 
 public class FileBasedScriptExecutor implements ScriptExecutor{
 	
@@ -121,6 +122,10 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
         result.cloudifyHome = ApplicationContext.get().conf().server.environment.cloudifyHome;
         result.managerIp = serverNode.getPublicIP();
 
+        if ( !StringUtils.isEmptyOrSpaces(serverNode.getPrivateKey()) ){
+            result.privateKey = serverNode.getPrivateKey();
+        }
+
         // add application name and service for mail sending
 
         ExecutionDataModel executionDataModel = serverNode.getExecutionDataModel();
@@ -148,6 +153,10 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
                 result.mandrill.data.linkTitle.setContent( serverNode.getWidget().getConsoleName() );
 
 
+                String bcc = serverNode.getWidget().installFinishedEmailDetails.getBcc();
+                if ( !StringUtils.isEmptyOrSpaces(bcc) ){
+                    result.bcc = bcc;
+                }
 
                 result.mandrill.to.add(
                         new ExecuteData.MandrillEmailAddressItem(loginDetails.email, loginDetails.name + " " + loginDetails.lastName, "to")

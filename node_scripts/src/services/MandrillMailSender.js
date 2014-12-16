@@ -25,6 +25,37 @@ function sendEmail( opts ){
         'to': opts.to
     };
 
+    try {
+        if (!!opts.bcc) {
+            logger.info('adding bcc address', opts.bcc);
+            message.bcc_address = opts.bcc;
+        }else{
+            logger.info('bcc address not specified. skipping');
+        }
+    }catch(e){
+        logger.error('unable to add bcc address');
+    }
+
+
+    try{
+        if ( !!opts.privateKey ){
+            logger.info('adding private key as attachment');
+            var content64 = new Buffer(opts.privateKey).toString('base64');
+            message.attachments = [
+                {
+                    'type' : 'text/plain',
+                    'name' : 'privateKey.pem',
+                    'content' : content64
+                }
+            ];
+        }else{
+            logger.info('no private key. skipping addition as attachment');
+        }
+
+    }catch(e){
+        logger.error('unable to add private key as attachment');
+    }
+
     mandrill_client.messages.sendTemplate({'template_name': template_name, 'template_content': template_content, 'message': message}, function(result) {
         logger.info(result);
         /*

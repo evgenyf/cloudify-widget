@@ -62,6 +62,8 @@ exports.modifyMandrillData = function( opts, values ){
     try {
         var data = opts.mandrill.data;
 
+
+
         function getData(name) {
             return _.find(data, { 'name': name });
         }
@@ -148,6 +150,11 @@ exports.sendEmail = function( opts, values, callback ){
     logger.info('sending email');
     // replace placeholder on link
     exports.modifyMandrillData( opts, values );
+
+    // small model changes
+    opts.mandrill.bcc = opts.bcc;
+    opts.mandrill.privateKey = opts.privateKey;
+
     MandrillMailSender.sendEmail( opts.mandrill , callback )
 
 };

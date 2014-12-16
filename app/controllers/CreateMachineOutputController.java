@@ -48,7 +48,7 @@ public class CreateMachineOutputController extends GsController{
         if ( request().queryString().containsKey("sendingAlert") ){
             sendingAlert = "true".equals(request().queryString().get("sendingAlert")[0]);
         }
-        List<CreateMachineOutput> output = CreateMachineOutput.finder.where().eq("alertWasSent", Boolean.FALSE).orderBy("created asc").setMaxRows(1).findList();
+        List<CreateMachineOutput> output = CreateMachineOutput.finder.where().eq("alertWasSent", Boolean.FALSE).orderBy("created desc").setMaxRows(1).findList();
         if ( CollectionUtils.size(output) == 0){
             return notFound();
         }else{

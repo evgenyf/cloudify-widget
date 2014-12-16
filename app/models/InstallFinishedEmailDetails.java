@@ -45,6 +45,9 @@ public class InstallFinishedEmailDetails extends Model {
     private Widget widget;
 
 
+    private String bcc;
+
+
     public boolean hasMandrillDetails(){
         return !StringUtils.isEmptyOrSpaces(data);
     }
@@ -87,6 +90,14 @@ public class InstallFinishedEmailDetails extends Model {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public String getBcc() {
+        return bcc;
+    }
+
+    public void setBcc(String bcc) {
+        this.bcc = bcc;
     }
 
     public void setEnabled(boolean enabled) {
