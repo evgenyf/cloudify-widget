@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- *
+ * @module taskReader
+ * @description
  *
  * Handles the files' circle of life.
  *

@@ -27,15 +27,24 @@ module.exports = function (grunt) {
 
         jshint: {
             options: {
-                jshintrc: '.jshintrc'
+                jshintrc: '.jshintrc',
+                reporter: require('jshint-stylish')
             },
             all: [
                 'Gruntfile.js',
                 'src/{,*/}*.js'
             ]
+        },
+        jsdoc : {
+            dist : {
+                src: ['src/**/*.js', 'test/*.js'],
+                options: {
+                    destination: 'doc'
+                }
+            }
         }
 
     });
 
-    grunt.registerTask('default', [ 'jshint' ]);
+    grunt.registerTask('default', [ 'jsdoc','jshint' ]);
 };

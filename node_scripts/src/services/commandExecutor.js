@@ -1,3 +1,12 @@
+'use strict';
+
+/**
+ * @module commandExecutor
+ *
+ * @description
+ *
+ * executes commands in cloudify.
+ */
 var logger = require('log4js').getLogger('commandExecutor');
 var path = require('path');
 var spawn = require('child_process').spawn;
@@ -5,26 +14,16 @@ var spawn = require('child_process').spawn;
 
 /**
  *
+ * @param {object} opts
+ * @param {string} opts.arguments CSV of arguments to run the command with "bootstrap-cloud,softlayer"
+ * @param {string} opts.executable cloudify.sh location
+ * @param {string} opts.cloudifyHome the cloudify home directory
  *
- * opts - {
- *     "arguments" - CSV of arguments to run the command with "bootstrap-cloud,softlayer"
- *     "executable" - cloudify.sh location
- *     "cloudifyHome" - the cloudify home directory
- * }
- *
- *
- * handlers: {
- *
- *      "onErr" - on error `function(error){}`
- *      "onStdout" - on std out data  `function(data){}`
- *      "onStderr" - on err data  `function(data){}`
-  *     "onClose" - on close `function(exitCode){}`
- *
- * }
- *
- *
- *
- * @param opts
+ * @param {object} handlers
+ * @param {function} handlers.onErr on error <pre>function(error){}</pre>
+ * @param {function} handlers.onStdout on std out data <pre>function(data){}</pre>
+ * @param {function} handlers.onStderr on err data <pre>function(data){}</pre>
+ * @param {function} handlers.onClose <pre>function(exitCode){}</pre>
  */
 
 exports.execute = function( opts , handlers ){
@@ -51,7 +50,7 @@ exports.execute = function( opts , handlers ){
     myCmd.stdout.on('data', handlers.onStdout );
 
     if ( !handlers.onStderr ){
-        throw 'stderr handler is missing'
+        throw 'stderr handler is missing';
     }
     myCmd.stderr.on('data', handlers.onStderr );
 

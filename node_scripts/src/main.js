@@ -1,3 +1,4 @@
+'use strict';
 
 var path = require('path');
 var fs = require('fs-extra');
@@ -5,6 +6,7 @@ var async = require('async');
 var logger = require('log4js').getLogger('main');
 var conf = require('./services/conf');
 var services = require('./services');
+var _ = require('lodash');
 
 logger.setLevel(conf.log.level);
 logger.trace('conf',JSON.stringify(conf));
@@ -35,7 +37,7 @@ exports.doMain = function(){
         },
         function getNextTask( callback ){
             logger.trace('getting next task');
-            services.taskReader.getNextTask( conf.directories.newDirectory , callback )
+            services.taskReader.getNextTask( conf.directories.newDirectory , callback );
         },
         function createExecutionDir( _opts, callback ){
             opts = _opts;
@@ -98,8 +100,15 @@ exports.doMain = function(){
             opts.mandrill.data = services.postExecution.convertMandrillData( opts.mandrill.data );
 
             services.postExecution.resolveIp( opts, function( error, resolvedIp ){
+                services.postExecution.resolveSoftlayerCredentials(opts, function(err, credentialsResult){
+                    if ( !!err ){
+                        logger.error('was unable to resolve credentials from softlayer',err);
+                    }
 
-                services.postExecution.sendEmail( opts, { 'serviceIp' : resolvedIp }, callback );
+
+                    services.postExecution.sendEmail( opts, _.merge({ 'serviceIp' : resolvedIp },credentialsResult), callback );
+                });
+
 
             });
 

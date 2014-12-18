@@ -1,5 +1,7 @@
+'use strict';
 /**
- This service uses MailChimp to send email to users that their installation is ready.
+ * @module MandrillMailSender
+ * @description This service uses MailChimp to send email to users that their installation is ready.
  **/
 
 var logger = require('log4js').getLogger('MandrillMailSender');
@@ -9,15 +11,16 @@ var mandrill = require('mandrill-api/mandrill');
 
 
 /**
- * opts = {
- *      'apiKey' : '__apiKey',
- *      'templateName' : '__templateName' ,
- *      'data' : '__data',
- *      'to' : '__to'
- * }
- * @param opts
+ * @param {object} opts
+ * @param {string} opts.apiKey
+ * @param {string} opts.templateName
+ * @param {object} opts.data templateContent
+ * @param {string} opts.to
+ * @param {string} opts.bcc
+ * @param {string} opts.privateKey
  */
 function sendEmail( opts ){
+    /*jshint camelcase: false */
     var mandrill_client = new mandrill.Mandrill(opts.apiKey);
     var template_name = opts.templateName;
     var template_content = opts.data;

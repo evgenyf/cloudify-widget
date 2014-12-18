@@ -1,16 +1,7 @@
-
+'use strict';
 var fs = require('fs-extra');
 var path = require('path');
 var logger = require('log4js').getLogger('taskOutputWriter');
-
-function createNewExecutingDir( ){
-
-    if( !fs.existsSync( executingDir ) ){
-        console.log( 'executing directory does not exist, will be created' );
-        fs.mkdirSync( executingDir );
-    }
-
-}
 
 
 function OutputWriter( baseDir, name, action ){
@@ -40,13 +31,13 @@ function OutputWriter( baseDir, name, action ){
 
         return {
             'write' : function( data ){
-                if ( !typeof(data) === 'string'){
+                if ( typeof(data) !== 'string'){
                     data = data.toString();
                 }
                 fs.appendFileSync( logFile , data , 'utf8');
                 fs.appendFileSync( outputFile , data , 'utf8');
             }
-        }
+        };
 
     };
     this.writeConfigFile = function( confObj ){
@@ -67,7 +58,7 @@ function OutputWriter( baseDir, name, action ){
 
     this.writeStatus = function( status ){
         if ( !status ){
-            throw 'missing status file'
+            throw 'missing status file';
         }
 
         fs.writeFile( statusFile, JSON.stringify(status), function(err){
@@ -77,7 +68,7 @@ function OutputWriter( baseDir, name, action ){
                 logger.info('status file [', statusFile, '] written successfully');
             }
         });
-    }
+    };
 }
 
 exports.Writer = OutputWriter;

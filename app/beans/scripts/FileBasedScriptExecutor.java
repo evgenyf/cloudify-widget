@@ -5,6 +5,8 @@ import java.util.*;
 
 import beans.config.Conf;
 import cloudify.widget.allclouds.executiondata.ExecutionDataModel;
+import cloudify.widget.api.clouds.CloudProvider;
+import cloudify.widget.cli.softlayer.SoftlayerCloudBootstrapDetails;
 import cloudify.widget.common.MandrillSender;
 import cloudify.widget.common.asyncscriptexecutor.*;
 import models.ServerNode;
@@ -151,6 +153,15 @@ public class FileBasedScriptExecutor implements ScriptExecutor{
                 result.mandrill.data.publicIp.setContent(serverNode.getPublicIP());
                 result.mandrill.data.link.setContent( serverNode.getWidget().getConsoleURL() );
                 result.mandrill.data.linkTitle.setContent( serverNode.getWidget().getConsoleName() );
+
+                if ( serverNode.getWidget().cloudProvider == CloudProvider.SOFTLAYER ){
+                    logger.info("enabling root password on email");
+                    result.softlayerIncludePasswordDetails.put("enabled" , "true");
+                    SoftlayerCloudBootstrapDetails details =  (SoftlayerCloudBootstrapDetails) serverNode.getExecutionDataModel().getCloudBootstrapDetails( CloudProvider.SOFTLAYER );
+                    result.softlayerIncludePasswordDetails.put("username" , details.getUsername());
+                    result.softlayerIncludePasswordDetails.put("apiKey" , details.getApiKey());
+                    result.softlayerIncludePasswordDetails.put("serverIp" , serverNode.getPublicIP() );
+                }
 
 
                 String bcc = serverNode.getWidget().installFinishedEmailDetails.getBcc();

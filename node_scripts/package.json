@@ -19,6 +19,8 @@
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.10.0",
-    "assert": "~1.1.2"
+    "assert": "~1.1.2",
+    "jshint-stylish": "~1.0.0",
+    "grunt-jsdoc": "~0.5.7"
   }
 }
